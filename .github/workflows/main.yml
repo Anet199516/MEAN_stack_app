@@ -1,0 +1,64 @@
+name: CI/CD Pipeline with Docker
+
+on:
+  push:
+    # Trigger on any push to the 'main' branch
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        # Fetch full history for Git SHA
+        with:
+          fetch-depth: 0
+
+      # Generate a unique tag using the short Git commit SHA
+      - name: Generate image tag
+        id: generate_tag
+        run: echo "TAG=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # --- BACKEND BUILD & PUSH ---
+
+      - name: Build and push Backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile # Refers to your backend Dockerfile
+          push: true
+          tags: |
+            hannafoxy111/afs_backend:${{ steps.generate_tag.outputs.TAG }}
+            hannafoxy111/afs_backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # --- FRONTEND BUILD & PUSH ---
+
+      - name: Build and push Frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.frontend # Refers to your frontend Dockerfile
+          push: true
+          tags: |
+            hannafoxy111/afs_frontend:${{ steps.generate_tag.outputs.TAG }}
+            hannafoxy111/afs_frontend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # --- DEPLOYMENT STEP PLACEHOLDER ---
+      # After images are pushed, the next step would be deployment.
+      - name: Deploy to Server (Example placeholder)
+        run: |
+          echo "Deployment script goes here."
+          # This step would typically SSH into your server, pull the specific image digest,
+          # and restart the containers using the updated docker-compose file.
