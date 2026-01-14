@@ -1,0 +1,47 @@
+services:
+  frontend:
+    container_name: afs_frontend_prod
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+
+  backend:
+    environment:
+      MONGODB_URI: ${MONGODB_URI}
+      SECRET_TOKEN: ${SECRET_TOKEN}
+    container_name: afs_backend_prod
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+  mongo:
+    container_name: mongo_prod
+    image: mongo
+    volumes:
+      # persistent storage for production DB
+      - ./data_prod:/data/db
+    ports:
+      - "27017:27017"
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: password
+    depends_on:
+      - mongo
+
