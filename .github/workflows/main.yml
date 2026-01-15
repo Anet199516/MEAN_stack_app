@@ -2,15 +2,22 @@ name: CI/CD Pipeline with Docker
 
 on:
   push:
-    # Trigger on any push to the 'main' branch
     branches:
       - main
-
+  pull_request:
+    branches:
+      - main
+  # Jobs it's a set of actions that will be executed
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    # 3 dif jobs will run for 3 different operations systems
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - name: Checkout code
+        # checkout repo - @v4 it's a veriosn
         uses: actions/checkout@v4
         # Fetch full history for Git SHA
         with:
