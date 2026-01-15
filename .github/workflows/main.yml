@@ -10,11 +10,8 @@ on:
   # Jobs it's a set of actions that will be executed
 jobs:
   build-and-push:
-    # 3 dif jobs will run for 3 different operations systems
-    runs-on: ${{matrix.os}}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+    # We could use 3 dif jobs that will run for 3 different operations systems
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         # checkout repo - @v4 it's a veriosn
