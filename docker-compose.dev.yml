@@ -17,12 +17,13 @@ services:
     working_dir: /usr/src/app
     volumes:
       - .:/usr/src/app
+      - /usr/src/app/node_modules
     command: [ "npm", "run", "dev:docker" ]
   mongo:
     container_name: mongo
     image: mongo
     volumes:
-      - ./data:/data/db
+      - mongo_data:/data/db
     ports:
       - "27017:27017"
   mongo-express:
@@ -38,3 +39,5 @@ services:
       ME_CONFIG_BASICAUTH_PASSWORD: password
     depends_on:
       - mongo
+volumes:
+  mongo_data:
