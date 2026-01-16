@@ -29,7 +29,7 @@ USER appuser
 # Copy only production dependencies from the builder stage
 # We install them again in the runtime image to exclude devDependencies
 COPY --from=builder /app/package*.json ./
-RUN npm ci --only=production
+RUN npm ci --only=production && npm cache clean --force
 
 # Copy the built files from the builder stage (dist/<app>/server + browser)
 # Make sure the /dist path is correct
