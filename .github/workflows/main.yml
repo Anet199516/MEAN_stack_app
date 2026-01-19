@@ -59,10 +59,25 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # --- DEPLOYMENT STEP PLACEHOLDER ---
-      # After images are pushed, the next step would be deployment.
-      - name: Deploy to Server (Example placeholder)
-        run: |
-          echo "Deployment script goes here."
-          # This step would typically SSH into your server, pull the specific image digest,
-          # and restart the containers using the updated docker-compose file.
+      # --- DEPLOYMENT STEP ---
+  deploy:
+      # This job runs only after 'build-and-push' completes successfully
+      needs: [ build-and-push ]
+      # We run this job only on 'push' events to the 'main' branch, not pull requests
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      runs-on: ubuntu-latest
+      steps:
+        - name: Trigger Render Backend Deployment
+          uses: jonaro00/render-deploy-action@v0.0.1
+          with:
+            service-id: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}
+            api-key: ${{ secrets.RENDER_API_KEY }}
+            # The action forces Render to re-pull the 'latest' tag you just updated
+            wait-for-success: true
+
+        - name: Trigger Render Frontend Deployment
+          uses: jonaro00/render-deploy-action@v0.0.1
+          with:
+            service-id: ${{ secrets.RENDER_FRONTEND_SERVICE_ID }}
+            api-key: ${{ secrets.RENDER_API_KEY }}
+            wait-for-success: true
