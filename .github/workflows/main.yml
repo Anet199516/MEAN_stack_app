@@ -71,7 +71,7 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - name: Trigger Render Backend Deployment
-          uses: jonaro00/render-deploy-action@v0.0.1
+          uses: johnbeynon/render-deploy-action@v0.0.8
           with:
             service-id: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}
             api-key: ${{ secrets.RENDER_API_KEY }}
@@ -79,7 +79,7 @@ jobs:
             wait-for-success: true
 
         - name: Trigger Render Frontend Deployment
-          uses: jonaro00/render-deploy-action@v0.0.1
+          uses: johnbeynon/render-deploy-action@v0.0.8
           with:
             service-id: ${{ secrets.RENDER_FRONTEND_SERVICE_ID }}
             api-key: ${{ secrets.RENDER_API_KEY }}
