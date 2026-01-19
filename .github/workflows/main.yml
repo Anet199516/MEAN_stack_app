@@ -4,6 +4,9 @@ on:
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main
   # Jobs it's a set of actions that will be executed
 jobs:
   build-and-push:
