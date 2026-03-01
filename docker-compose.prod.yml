@@ -3,7 +3,7 @@ services:
     container_name: afs_frontend_prod
     build:
       context: .
-      dockerfile: Dockerfile.frontend
+      dockerfile: frontend.Dockerfile
     ports:
       - "80:80"
     depends_on:
@@ -18,7 +18,7 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: backend.Dockerfile
     ports:
       - "3000:3000"
     depends_on:
