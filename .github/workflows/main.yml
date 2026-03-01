@@ -40,7 +40,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile # Refers to your backend Dockerfile
+          file: backend.Dockerfile # Refers to your backend Dockerfile
           push: true
           tags: |
             hannafoxy111/afs_backend:${{ steps.generate_tag.outputs.TAG }}
@@ -54,7 +54,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile.frontend # Refers to your frontend Dockerfile
+          file: frontend.Dockerfile # Refers to your frontend Dockerfile
           push: true
           tags: |
             hannafoxy111/afs_frontend:${{ steps.generate_tag.outputs.TAG }}
